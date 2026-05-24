@@ -123,7 +123,13 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen space-y-10 p-8">
+  <main className="min-h-screen space-y-10 p-8">
+    <a
+      href="/"
+      className="inline-block rounded-xl bg-stone-900 px-6 py-4 text-2xl font-bold text-white"
+    >
+      ← Back to albums
+    </a>
       <h1 className="text-4xl font-bold">Admin</h1>
 
       <section className="rounded-2xl bg-stone-100 p-6">
