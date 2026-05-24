@@ -22,6 +22,15 @@ export default async function HomePage() {
       <pre className="whitespace-pre-wrap rounded-xl bg-red-100 p-4">
         {JSON.stringify(error, null, 2)}
       </pre>
+
+      <div className="mt-10 text-center">
+  <a
+    href="/admin"
+    className="text-sm text-stone-400"
+  >
+    Admin
+  </a>
+</div>
     </main>
   );
 }
