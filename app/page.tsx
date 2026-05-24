@@ -23,14 +23,6 @@ export default async function HomePage() {
         {JSON.stringify(error, null, 2)}
       </pre>
 
-      <div className="mt-10 text-center">
-  <a
-    href="/admin"
-    className="text-sm text-stone-400"
-  >
-    Admin
-  </a>
-</div>
     </main>
   );
 }
@@ -64,6 +56,15 @@ export default async function HomePage() {
           </Link>
         ))}
       </div>
+
+      <div className="mt-10 text-center">
+  <a
+    href="/admin"
+    className="text-sm text-stone-400"
+  >
+    Admin
+  </a>
+</div>
     </main>
   );
 }
