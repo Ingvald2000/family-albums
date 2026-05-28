@@ -48,28 +48,26 @@ export default async function AlbumPage({
         </h1>
       </div>
 
-      <div className="snap-x snap-mandatory overflow-x-auto whitespace-nowrap">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {(photos as Photo[]).map((photo) => (
-          <section
+          <a
             key={photo.id}
-            className="inline-flex h-[82vh] w-full snap-center flex-col items-center justify-center p-2"
+            href={publicImageUrl(photo.image_path)}
+            target="_blank"
+            className="overflow-hidden rounded-2xl bg-white shadow"
           >
             <img
               src={publicImageUrl(photo.image_path)}
               alt={photo.title ?? "Family photo"}
-              className="max-h-[70vh] max-w-full rounded-3xl object-contain shadow-lg"
+              className="aspect-square w-full object-cover"
             />
 
-            <div className="mt-4 text-center text-3xl font-semibold text-stone-900">
-              {photo.title}
-            </div>
-
-            {photo.taken_at && (
-              <div className="mt-2 text-center text-2xl text-stone-600">
-                {new Date(photo.taken_at).toLocaleDateString()}
+            {photo.title && (
+              <div className="p-3 text-center text-xl font-bold text-stone-900">
+                {photo.title}
               </div>
             )}
-          </section>
+          </a>
         ))}
       </div>
     </main>
