@@ -34,7 +34,7 @@ export default function AdminPage() {
   const [uploadAlbumId, setUploadAlbumId] = useState("");
   const [photoTitle, setPhotoTitle] = useState("");
   const [photoDate, setPhotoDate] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
 
   async function loadData() {
     const albumsResult = await supabase
@@ -123,11 +123,14 @@ export default function AdminPage() {
   }
 
   async function uploadPhoto() {
-    if (!file || !uploadAlbumId) {
-      setMessage("Choose an album and photo first");
-      return;
-    }
+  if (files.length === 0 || !uploadAlbumId) {
+    setMessage("Choose an album and at least one photo first");
+    return;
+  }
 
+  let lastUploadedPath = "";
+
+  for (const file of files) {
     const safeName = file.name.replaceAll(" ", "-").toLowerCase();
     const path = `${uploadAlbumId}/${Date.now()}-${safeName}`;
 
@@ -151,28 +154,29 @@ export default function AdminPage() {
       return;
     }
 
-    await supabase
-  .from("albums")
-  .update({ cover_path: path })
-  .eq("id", uploadAlbumId);
+    lastUploadedPath = path;
+  }
 
-const uploadedAlbum = albums.find((album) => album.id === uploadAlbumId);
-
-if (uploadedAlbum?.parent_id) {
   await supabase
     .from("albums")
-    .update({ cover_path: path })
-    .eq("id", uploadedAlbum.parent_id);
-}
+    .update({ cover_path: lastUploadedPath })
+    .eq("id", uploadAlbumId);
 
+  const uploadedAlbum = albums.find((album) => album.id === uploadAlbumId);
 
-
-    setPhotoTitle("");
-    setPhotoDate("");
-    setFile(null);
-    setMessage("Photo uploaded");
-    loadData();
+  if (uploadedAlbum?.parent_id) {
+    await supabase
+      .from("albums")
+      .update({ cover_path: lastUploadedPath })
+      .eq("id", uploadedAlbum.parent_id);
   }
+
+  setPhotoTitle("");
+  setPhotoDate("");
+  setFiles([]);
+  setMessage(`${files.length} photos uploaded`);
+  loadData();
+}
 
   async function editPhoto(photo: Photo) {
     const title = prompt("Photo title:", photo.title ?? "");
@@ -351,9 +355,10 @@ loadData();
         <input
           type="file"
           accept="image/*"
+          multiple
           className="mb-4 w-full text-2xl"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-        />
+          onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+/>
 
         <button
           onClick={uploadPhoto}
