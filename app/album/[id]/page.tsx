@@ -3,6 +3,12 @@ import { supabase, publicImageUrl } from "@/lib/supabase";
 
 export const revalidate = 60;
 
+type Album = {
+  id: string;
+  title: string;
+  cover_path: string | null;
+};
+
 type Photo = {
   id: string;
   title: string | null;
@@ -19,9 +25,15 @@ export default async function AlbumPage({
 
   const { data: album } = await supabase
     .from("albums")
-    .select("title")
+    .select("title,parent_id")
     .eq("id", id)
     .single();
+
+  const { data: subAlbums } = await supabase
+    .from("albums")
+    .select("id,title,cover_path")
+    .eq("parent_id", id)
+    .order("sort_order");
 
   const { data: photos, error } = await supabase
     .from("photos")
@@ -37,7 +49,7 @@ export default async function AlbumPage({
     <main className="min-h-screen bg-stone-50 p-4">
       <div className="mb-6 flex items-center gap-4">
         <Link
-          href="/"
+          href={album?.parent_id ? `/album/${album.parent_id}` : "/"}
           className="rounded-2xl bg-stone-900 px-6 py-4 text-3xl font-bold text-white"
         >
           ← Back
@@ -47,6 +59,38 @@ export default async function AlbumPage({
           {album?.title ?? "Album"}
         </h1>
       </div>
+
+      {(subAlbums as Album[]).length > 0 && (
+        <>
+          <h2 className="mb-4 text-3xl font-bold">Albums</h2>
+
+          <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {(subAlbums as Album[]).map((sub) => (
+              <Link
+                key={sub.id}
+                href={`/album/${sub.id}`}
+                className="overflow-hidden rounded-2xl bg-white shadow"
+              >
+                {sub.cover_path ? (
+                  <img
+                    src={publicImageUrl(sub.cover_path)}
+                    alt=""
+                    className="aspect-square w-full object-cover"
+                  />
+                ) : (
+                  <div className="aspect-square bg-stone-200" />
+                )}
+
+                <div className="p-4 text-center text-2xl font-bold">
+                  {sub.title}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
+
+      <h2 className="mb-4 text-3xl font-bold">Photos</h2>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {(photos as Photo[]).map((photo) => (
@@ -63,7 +107,7 @@ export default async function AlbumPage({
             />
 
             {photo.title && (
-              <div className="p-3 text-center text-xl font-bold text-stone-900">
+              <div className="p-3 text-center text-xl font-bold">
                 {photo.title}
               </div>
             )}

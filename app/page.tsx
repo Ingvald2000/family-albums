@@ -13,19 +13,12 @@ export default async function HomePage() {
   const { data: albums, error } = await supabase
     .from("albums")
     .select("id,title,cover_path")
+    .is("parent_id", null)
     .order("sort_order");
 
   if (error) {
-  return (
-    <main className="p-8 text-2xl">
-      <h1 className="mb-4 text-4xl font-bold">Could not load albums</h1>
-      <pre className="whitespace-pre-wrap rounded-xl bg-red-100 p-4">
-        {JSON.stringify(error, null, 2)}
-      </pre>
-
-    </main>
-  );
-}
+    return <main className="p-8 text-3xl">Could not load albums.</main>;
+  }
 
   return (
     <main className="min-h-screen bg-stone-50 p-6">
@@ -58,13 +51,10 @@ export default async function HomePage() {
       </div>
 
       <div className="mt-10 text-center">
-  <a
-    href="/admin"
-    className="text-sm text-stone-400"
-  >
-    Admin
-  </a>
-</div>
+        <a href="/admin" className="text-sm text-stone-400">
+          Admin
+        </a>
+      </div>
     </main>
   );
 }
