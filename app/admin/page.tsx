@@ -152,10 +152,20 @@ export default function AdminPage() {
     }
 
     await supabase
-      .from("albums")
-      .update({ cover_path: path })
-      .eq("id", uploadAlbumId)
-      .is("cover_path", null);
+  .from("albums")
+  .update({ cover_path: path })
+  .eq("id", uploadAlbumId);
+
+const uploadedAlbum = albums.find((album) => album.id === uploadAlbumId);
+
+if (uploadedAlbum?.parent_id) {
+  await supabase
+    .from("albums")
+    .update({ cover_path: path })
+    .eq("id", uploadedAlbum.parent_id);
+}
+
+
 
     setPhotoTitle("");
     setPhotoDate("");
@@ -194,12 +204,25 @@ export default function AdminPage() {
       .eq("id", photo.id);
 
     if (error) {
-      setMessage(error.message);
-      return;
-    }
+  setMessage(error.message);
+  return;
+}
 
-    setMessage("Photo deleted");
-    loadData();
+const { data: remaining } = await supabase
+  .from("photos")
+  .select("image_path")
+  .eq("album_id", photo.album_id)
+  .limit(1);
+
+await supabase
+  .from("albums")
+  .update({
+    cover_path: remaining?.[0]?.image_path ?? null,
+  })
+  .eq("id", photo.album_id);
+
+setMessage("Photo deleted");
+loadData();
   }
 
   async function setCover(photo: Photo) {
