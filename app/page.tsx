@@ -23,8 +23,8 @@ export default async function HomePage() {
   return (
    <main className="min-h-screen bg-stone-50 p-5">
       <header className="mb-8 text-center">
-        <div className="mb-2 text-5xl">📷</div>
-        <h1 className="text-4xl font-bold text-stone-900">Familiebilder</h1>
+        <div className="mb-4 text-8xl">📷</div>
+        <h1 className="text-5xl font-bold text-stone-900">Familiebilder</h1>
         <p className="mt-2 text-lg text-stone-500">
           Bilder fra familie, turer og små øyeblikk
         </p>
