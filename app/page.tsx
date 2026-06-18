@@ -26,7 +26,7 @@ export default async function HomePage() {
         Family Photos
       </h1>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {(albums as Album[]).map((album) => (
           <Link
             key={album.id}
@@ -37,7 +37,7 @@ export default async function HomePage() {
               <img
                 src={publicImageUrl(album.cover_path)}
                 alt=""
-                className="h-56 w-full object-cover"
+                className="h-36 w-full object-cover"
               />
             ) : (
               <div className="h-56 bg-stone-200" />
