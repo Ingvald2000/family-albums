@@ -52,7 +52,7 @@ export default async function AlbumPage({
           href={album?.parent_id ? `/album/${album.parent_id}` : "/"}
           className="rounded-2xl bg-stone-900 px-6 py-4 text-3xl font-bold text-white"
         >
-          ← Back
+          ← Tilbake
         </Link>
 
         <h1 className="text-4xl font-bold text-stone-900">
