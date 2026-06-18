@@ -94,10 +94,9 @@ export default async function AlbumPage({
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {(photos as Photo[]).map((photo) => (
-          <a
-            key={photo.id}
-            href={publicImageUrl(photo.image_path)}
-            target="_blank"
+          <Link
+             key={photo.id}
+            href={`/photo/${photo.id}`}
             className="overflow-hidden rounded-2xl bg-white shadow"
           >
             <img
@@ -111,7 +110,7 @@ export default async function AlbumPage({
                 {photo.title}
               </div>
             )}
-          </a>
+          </Link>
         ))}
       </div>
     </main>
