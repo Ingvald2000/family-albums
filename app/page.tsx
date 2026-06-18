@@ -17,21 +17,25 @@ export default async function HomePage() {
     .order("sort_order");
 
   if (error) {
-    return <main className="p-8 text-3xl">Could not load albums.</main>;
+    return <main className="p-8 text-3xl">Kunne ikke laste album.</main>;
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 p-6">
-      <h1 className="mb-8 text-center text-5xl font-bold text-stone-900">
-        Family Photos
-      </h1>
+   <main className="min-h-screen bg-stone-50 p-5">
+      <header className="mb-8 text-center">
+        <div className="mb-2 text-5xl">📷</div>
+        <h1 className="text-4xl font-bold text-stone-900">Familiebilder</h1>
+        <p className="mt-2 text-lg text-stone-500">
+          Bilder fra familie, turer og små øyeblikk
+        </p>
+      </header>
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {(albums as Album[]).map((album) => (
           <Link
             key={album.id}
             href={`/album/${album.id}`}
-            className="overflow-hidden rounded-3xl bg-white shadow-lg active:scale-95"
+            className="overflow-hidden rounded-3xl bg-white shadow-md transition active:scale-95"
           >
             {album.cover_path ? (
               <img
@@ -40,11 +44,15 @@ export default async function HomePage() {
                 className="h-36 w-full object-cover"
               />
             ) : (
-              <div className="h-56 bg-stone-200" />
+              <div className="flex h-36 items-center justify-center bg-stone-200 text-4xl">
+                📁
+              </div>
             )}
 
-            <div className="p-6 text-center text-4xl font-bold text-stone-900">
-              {album.title}
+            <div className="p-3 text-center">
+              <div className="text-xl font-bold text-stone-900">
+                {album.title}
+              </div>
             </div>
           </Link>
         ))}
