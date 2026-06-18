@@ -44,7 +44,7 @@ export default async function PhotoPage({
       <div className="flex items-center justify-between p-4">
         <Link
           href={`/album/${currentPhoto.album_id}`}
-          className="rounded-xl bg-white/20 px-5 py-3 text-2xl font-bold"
+          className="rounded-2xl bg-white/20 px-5 py-3 text-2xl font-bold"
         >
           ← Tilbake
         </Link>
