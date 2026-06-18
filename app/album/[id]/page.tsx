@@ -50,7 +50,7 @@ export default async function AlbumPage({
       <div className="mb-6 flex items-center gap-4">
         <Link
           href={album?.parent_id ? `/album/${album.parent_id}` : "/"}
-          className="rounded-2xl bg-stone-900 px-6 py-4 text-3xl font-bold text-white"
+          className="rounded-2xl bg-stone-900 px-6 py-4 text-2xl font-bold text-white"
         >
           ← Tilbake
         </Link>
