@@ -22,6 +22,7 @@ const PASSWORD = "family123";
 const BUCKET = "family-photos";
 
 export default function AdminPage() {
+  const [uploading, setUploading] = useState(false);
   const [password, setPassword] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -123,59 +124,72 @@ export default function AdminPage() {
   }
 
   async function uploadPhoto() {
+  if (uploading) return;
+
   if (files.length === 0 || !uploadAlbumId) {
     setMessage("Choose an album and at least one photo first");
     return;
   }
 
-  let lastUploadedPath = "";
+  setUploading(true);
+  setMessage(`Laster opp 0 av ${files.length} bilder...`);
 
-  for (const file of files) {
-    const safeName = file.name.replaceAll(" ", "-").toLowerCase();
-    const path = `${uploadAlbumId}/${Date.now()}-${safeName}`;
+  try {
+    let lastUploadedPath = "";
 
-    const upload = await supabase.storage.from(BUCKET).upload(path, file);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
 
-    if (upload.error) {
-      setMessage(upload.error.message);
-      return;
+      setMessage(`Laster opp ${i + 1} av ${files.length} bilder...`);
+
+      const safeName = file.name.replaceAll(" ", "-").toLowerCase();
+      const path = `${uploadAlbumId}/${Date.now()}-${safeName}`;
+
+      const upload = await supabase.storage.from(BUCKET).upload(path, file);
+
+      if (upload.error) {
+        setMessage(upload.error.message);
+        return;
+      }
+
+      const insert = await supabase.from("photos").insert({
+        album_id: uploadAlbumId,
+        title: photoTitle || null,
+        image_path: path,
+        taken_at: photoDate || null,
+        sort_order: 1,
+      });
+
+      if (insert.error) {
+        setMessage(insert.error.message);
+        return;
+      }
+
+      lastUploadedPath = path;
     }
 
-    const insert = await supabase.from("photos").insert({
-      album_id: uploadAlbumId,
-      title: photoTitle || null,
-      image_path: path,
-      taken_at: photoDate || null,
-      sort_order: 1,
-    });
-
-    if (insert.error) {
-      setMessage(insert.error.message);
-      return;
-    }
-
-    lastUploadedPath = path;
-  }
-
-  await supabase
-    .from("albums")
-    .update({ cover_path: lastUploadedPath })
-    .eq("id", uploadAlbumId);
-
-  const uploadedAlbum = albums.find((album) => album.id === uploadAlbumId);
-
-  if (uploadedAlbum?.parent_id) {
     await supabase
       .from("albums")
       .update({ cover_path: lastUploadedPath })
-      .eq("id", uploadedAlbum.parent_id);
-  }
+      .eq("id", uploadAlbumId);
 
-  setPhotoTitle("");
-  setPhotoDate("");
-  setFiles([]);
-  setMessage(`${files.length} photos uploaded`);
-  loadData();
+    const uploadedAlbum = albums.find((album) => album.id === uploadAlbumId);
+
+    if (uploadedAlbum?.parent_id) {
+      await supabase
+        .from("albums")
+        .update({ cover_path: lastUploadedPath })
+        .eq("id", uploadedAlbum.parent_id);
+    }
+
+    setPhotoTitle("");
+    setPhotoDate("");
+    setFiles([]);
+    setMessage(`${files.length} bilder lastet opp`);
+    loadData();
+  } finally {
+    setUploading(false);
+  }
 }
 
   async function editPhoto(photo: Photo) {
@@ -275,7 +289,7 @@ loadData();
           Open admin
         </button>
 
-        {message && <p className="mt-4 text-2xl font-bold">{message}</p>}
+        
       </main>
     );
   }
@@ -362,9 +376,15 @@ loadData();
 
         <button
           onClick={uploadPhoto}
-          className="rounded-xl bg-black px-6 py-4 text-2xl font-bold text-white"
-        >
-          Upload photo
+          disabled={uploading}
+          className={`rounded-xl px-6 py-4 text-2xl font-bold text-white transition
+          ${
+            uploading
+        ? "cursor-not-allowed bg-gray-400"
+        : "bg-black hover:bg-stone-800 active:scale-95"
+          }`}
+          >
+            {uploading ? "Laster opp..." : "Last opp bilder"}
         </button>
       </section>
 
@@ -454,10 +474,18 @@ loadData();
       </section>
 
       {message && (
-        <div className="fixed bottom-4 left-4 right-4 rounded-xl bg-black p-4 text-center text-xl font-bold text-white">
-          {message}
-        </div>
-      )}
+  <div
+    className={`fixed bottom-4 left-4 right-4 flex items-center justify-center gap-3 rounded-xl p-4 text-center text-xl font-bold text-white shadow-xl transition-all ${
+      uploading ? "bg-blue-600" : "bg-green-600"
+    }`}
+  >
+    {uploading && (
+      <div className="h-6 w-6 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+    )}
+
+    <span>{message}</span>
+  </div>
+)}
     </main>
   );
 }
