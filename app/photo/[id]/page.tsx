@@ -1,3 +1,4 @@
+import PhotoViewer from "./PhotoViewer";
 import Link from "next/link";
 import { supabase, publicImageUrl } from "@/lib/supabase";
 
@@ -54,26 +55,7 @@ export default async function PhotoPage({
         </div>
       </div>
 
-      <div className="flex flex-1 snap-x snap-mandatory overflow-x-auto">
-        {list.map((photo) => (
-          <section
-            key={photo.id}
-            className="flex min-w-full snap-center flex-col items-center justify-center p-4"
-          >
-            <img
-              src={publicImageUrl(photo.image_path)}
-              alt={photo.title ?? "Familiebilde"}
-              className="max-h-[75vh] max-w-full object-contain"
-            />
-
-            {photo.title && (
-              <div className="mt-4 text-center text-2xl font-bold">
-                {photo.title}
-              </div>
-            )}
-          </section>
-        ))}
-      </div>
+      <PhotoViewer photos={list} startIndex={index} /> 
 
       <div className="flex justify-between p-4">
         {previous ? (
