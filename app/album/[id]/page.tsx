@@ -67,23 +67,29 @@ export default async function AlbumPage({
           <div className="mx-auto mb-10 grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {(subAlbums as Album[]).map((sub) => (
               <Link
-                key={sub.id}
-                href={`/album/${sub.id}`}
-                className="overflow-hidden rounded-2xl bg-white shadow"
-              >
+  key={sub.id}
+  href={`/album/${sub.id}`}
+  className="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-stone-200 transition-all duration-300 hover:shadow-lg active:scale-95"
+>
                 {sub.cover_path ? (
                   <img
-                    src={publicImageUrl(sub.cover_path)}
-                    alt=""
-                    className="aspect-square w-full object-cover"
-                  />
+  src={publicImageUrl(sub.cover_path)}
+  alt=""
+  className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+/>
                 ) : (
                   <div className="aspect-square bg-stone-200" />
                 )}
 
-                <div className="p-4 text-center text-2xl font-bold">
-                  {sub.title}
-                </div>
+                <div className="p-4">
+  <h2 className="truncate text-lg font-semibold text-stone-900">
+    {sub.title}
+  </h2>
+
+  <p className="mt-1 text-sm text-stone-500">
+    Trykk for å åpne
+  </p>
+</div>
               </Link>
             ))}
           </div>
@@ -97,19 +103,23 @@ export default async function AlbumPage({
           <Link
              key={photo.id}
             href={`/photo/${photo.id}`}
-            className="overflow-hidden rounded-2xl bg-white shadow"
+            className="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-stone-200 transition-all duration-300 hover:shadow-lg active:scale-95"
           >
             <img
               src={publicImageUrl(photo.image_path)}
               alt={photo.title ?? "Family photo"}
-              className="aspect-square w-full object-cover"
+              className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
             />
 
-            {photo.title && (
-              <div className="p-3 text-center text-xl font-bold">
-                {photo.title}
-              </div>
-            )}
+            <div className="p-4">
+  <h2 className="truncate text-lg font-semibold text-stone-900">
+    {photo.title || "Bilde"}
+  </h2>
+
+  <p className="mt-1 text-sm text-stone-500">
+    Trykk for å åpne
+  </p>
+</div>
           </Link>
         ))}
       </div>
