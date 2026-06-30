@@ -46,8 +46,8 @@ export default async function AlbumPage({
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 p-4">
-      <div className="mb-6 flex items-center gap-4">
+    <main className="min-h-screen bg-stone-100 px-4 py-6">
+      <div className="mx-auto mb-8 flex max-w-5xl items-center gap-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-stone-200">
         <Link
           href={album?.parent_id ? `/album/${album.parent_id}` : "/"}
           className="rounded-2xl bg-stone-900 px-6 py-4 text-2xl font-bold text-white"
@@ -64,7 +64,7 @@ export default async function AlbumPage({
         <>
           <h2 className="mb-4 text-3xl font-bold">Albums</h2>
 
-          <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="mx-auto mb-10 grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {(subAlbums as Album[]).map((sub) => (
               <Link
                 key={sub.id}
@@ -92,7 +92,7 @@ export default async function AlbumPage({
 
       <h2 className="mb-4 text-3xl font-bold">Photos</h2>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {(photos as Photo[]).map((photo) => (
           <Link
              key={photo.id}
