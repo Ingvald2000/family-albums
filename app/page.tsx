@@ -41,13 +41,13 @@ export default async function HomePage() {
       <Link
         key={album.id}
         href={`/album/${album.id}`}
-        className="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-stone-200 transition active:scale-95"
+        className="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-stone-200 transition-all duration-300 hover:shadow-lg active:scale-95"
       >
         {album.cover_path ? (
           <img
             src={publicImageUrl(album.cover_path)}
             alt=""
-            className="h-36 w-full object-cover transition group-hover:scale-105"
+            className="h-44 w-full object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-36 items-center justify-center bg-stone-200 text-4xl">
@@ -55,11 +55,15 @@ export default async function HomePage() {
           </div>
         )}
 
-        <div className="p-3 text-center">
-          <div className="truncate text-lg font-bold text-stone-900">
+        <div className="p-4">
+          <h2 className="truncate text-lg font-semibold text-stone-900">
             {album.title}
-          </div>
-        </div>
+          </h2>
+
+            <p className="mt-1 text-sm text-stone-500">
+                  Trykk for å åpne
+            </p>
+</div>
       </Link>
     ))}
   </div>
